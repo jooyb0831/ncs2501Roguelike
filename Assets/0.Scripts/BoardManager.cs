@@ -28,12 +28,19 @@ public class BoardManager : MonoBehaviour
 
     //그릴 타일을 담을 배열
     public Tile[] GroundTiles; //바닥
-    public Tile[] WallTiles; //벽
+    public Tile[] BlockingTiles; //벽
 
     
 
     // Start is called before the first frame update
     void Start()
+    {
+
+        //플레이어 스폰
+        //Player.Spawn(this, new Vector2Int(1, 1));
+    }
+
+    public void Init()
     {
         //타일맵 컴포넌트 받아오기
         m_Tilemap = GetComponentInChildren<Tilemap>();
@@ -50,14 +57,14 @@ public class BoardManager : MonoBehaviour
             {
                 Tile tile;
 
-                 //각각의 셀 데이터는 따로 만들어줘야 함
+                //각각의 셀 데이터는 따로 만들어줘야 함
                 m_BoardData[x, y] = new CellData();
 
                 //가장자리일 경우
                 if (x == 0 || y == 0 || x == Width - 1 || y == Height - 1)
                 {
                     //벽타일 랜덤으로 가져옴
-                    tile = WallTiles[Random.Range(0, WallTiles.Length)];
+                    tile = BlockingTiles[Random.Range(0, BlockingTiles.Length)];
                     m_BoardData[x, y].Passable = false;
                 }
 
@@ -72,8 +79,6 @@ public class BoardManager : MonoBehaviour
                 m_Tilemap.SetTile(new Vector3Int(x, y, 0), tile);
             }
         }
-        //플레이어 스폰
-        Player.Spawn(this, new Vector2Int(1, 1));
     }
 
 

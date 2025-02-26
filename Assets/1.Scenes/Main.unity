@@ -424,6 +424,52 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
+--- !u!1 &1512372724
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1512372726}
+  - component: {fileID: 1512372725}
+  m_Layer: 0
+  m_Name: '[ GameManager ]'
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1512372725
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1512372724}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3d626378cee6ef6408dea13c43760a83, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  BoardManager: {fileID: 1742661002}
+  PlayerController: {fileID: 424843726}
+--- !u!4 &1512372726
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1512372724}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1742660999
 GameObject:
   m_ObjectHideFlags: 0
@@ -494,6 +540,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 6318b25a9002e1843b4ca6ca6d1035f0, type: 2}
   - {fileID: 11400000, guid: 8c5a0644de212b24281d758a02031b22, type: 2}
   - {fileID: 11400000, guid: d1715c96a0ccb004581d769175f30bfd, type: 2}
-  WallTiles:
+  BlockingTiles:
   - {fileID: 11400000, guid: 8dff12acad2baf34f8270f3d520368b6, type: 2}
   - {fileID: 11400000, guid: 15d17a2c1c904ae4486ed43c2825eee4, type: 2}
