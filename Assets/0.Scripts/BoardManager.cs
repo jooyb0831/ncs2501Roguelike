@@ -8,6 +8,7 @@ public class BoardManager : MonoBehaviour
     public class CellData
     {
         public bool Passable;
+        public CellObject ContainedObject;
     }
 
     //셀 데이터 받아오는 2차원 배열
@@ -30,7 +31,13 @@ public class BoardManager : MonoBehaviour
     public Tile[] GroundTiles; //바닥
     public Tile[] BlockingTiles; //벽
 
-    
+    public FoodObject[] FoodPrefab; //음식 프리팹
+
+    public List<Vector2Int> m_EmptyCellsLists;
+
+    [SerializeField] int number1;
+    [SerializeField] int number2;
+
 
     // Start is called before the first frame update
     void Start()
@@ -45,6 +52,10 @@ public class BoardManager : MonoBehaviour
         //타일맵 컴포넌트 받아오기
         m_Tilemap = GetComponentInChildren<Tilemap>();
         m_Grid = GetComponent<Grid>();
+
+        //비어있는 셀 리스트 초기화
+        m_EmptyCellsLists = new List<Vector2Int>();
+
 
         //보드 데이터 설정 (전체 새로 지칭)
         m_BoardData = new CellData[Width, Height];
@@ -73,13 +84,20 @@ public class BoardManager : MonoBehaviour
                     //바닥 타일 랜덤으로 가져옴
                     tile = GroundTiles[Random.Range(0, GroundTiles.Length)];
                     m_BoardData[x, y].Passable = true;
+
+                    //비어있고 이동가능한 셀을 리스트에 추가
+                    m_EmptyCellsLists.Add(new Vector2Int(x, y));
                 }
 
                 //해당하는 x,y 값에 랜덤으로 뽑은 타일 그리기
                 m_Tilemap.SetTile(new Vector3Int(x, y, 0), tile);
             }
         }
+        //플레이어가 있는 위치의 셀은 emptycellList에서 빼기
+        m_EmptyCellsLists.Remove(new Vector2Int(1, 1));
+        GenerateFood();
     }
+
 
 
     /// <summary>
@@ -104,6 +122,36 @@ public class BoardManager : MonoBehaviour
 
         //셀 인덱스 값 리턴
         return m_BoardData[cellIndex.x, cellIndex.y];
+    }
+
+
+    void GenerateFood()
+    {
+
+        int foodCount = Random.Range(number1, number2);
+        for (int i = 0; i < foodCount; i++)
+        {
+            //비어있고 이동 가능한 셀의 인덱스 받기
+            int randomIndex = Random.Range(1, m_EmptyCellsLists.Count);
+
+            //인덱스로 해당 좌표 찾기
+            Vector2Int coord = m_EmptyCellsLists[randomIndex];
+
+            //emptyCell리스트에서 해당 셀의 인덱스 제거
+            m_EmptyCellsLists.RemoveAt(randomIndex);
+
+            //좌표설정
+            CellData data = m_BoardData[coord.x, coord.y];
+
+            //음식생성
+            int randFoodIdx = Random.Range(0, FoodPrefab.Length);
+            FoodObject newFood = Instantiate(FoodPrefab[randFoodIdx]);
+
+            //위치변경
+            newFood.transform.position = CellToWorld(coord);
+
+            data.ContainedObject = newFood;
+        }
     }
     // Update is called once per frame
     void Update()

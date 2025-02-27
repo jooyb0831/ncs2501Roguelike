@@ -82,6 +82,11 @@ public class PlayerController : MonoBehaviour
                 //옮기려는 곳으로 위치 설정 및 플레이어의 위치 변경
                 MoveTo(newCellTarget);
 
+                if(cellData.ContainedObject != null)
+                {
+                    cellData.ContainedObject.PlayerEntered();
+                }
+
             }
             
         }

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class GameManager : MonoBehaviour
 {
@@ -11,6 +12,9 @@ public class GameManager : MonoBehaviour
 
     //property
     public TurnManager TurnManager{get; private set;}
+    public UIDocument UIDoc;
+
+    private Label m_FoodLabel;
 
     private int m_FoodAmount = 100;
 
@@ -27,6 +31,9 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        m_FoodLabel = UIDoc.rootVisualElement.Q<Label>("FoodLabel");
+        m_FoodLabel.text = $"Food : {m_FoodAmount}";
+
         TurnManager = new TurnManager();
         TurnManager.OnTick += OnTurnHappen; //OnTick이벤트에 메서드 등록하는 방법.
         BoardManager.Init();
@@ -35,8 +42,14 @@ public class GameManager : MonoBehaviour
 
     void OnTurnHappen()
     {
-        m_FoodAmount --;
+        ChangeFood(-1);
         Debug.Log($"Current Amount of Food : {m_FoodAmount}");
+    }
+
+    public void ChangeFood(int amount)
+    {
+        m_FoodAmount += amount;
+        m_FoodLabel.text = $"Food : {m_FoodAmount:000}";
     }
 
     // Update is called once per frame
