@@ -79,11 +79,21 @@ public class PlayerController : MonoBehaviour
             {   
                 //턴수체크(GameManager싱글톤 통해 접근)
                 GameManager.Instance.TurnManager.Tick();
-                //옮기려는 곳으로 위치 설정 및 플레이어의 위치 변경
-                MoveTo(newCellTarget);
 
-                if(cellData.ContainedObject != null)
+                //이동하려는 타일이 오브젝트 포함하고 있지 않은 경우 바로 이동
+                if(cellData.ContainedObject == null)
                 {
+                    //옮기려는 곳으로 위치 설정 및 플레이어의 위치 변경
+                    MoveTo(newCellTarget);
+                }
+                
+                //이동하려는 셀에 장애물이 있어 PlayerWnatsToEnter값이 True인 경우
+                else if(cellData.ContainedObject.PlayerWantsToEnter())
+                {
+                    //이동
+                    MoveTo(newCellTarget);
+                    
+                    //플레이어 먼저 이동하고 호출
                     cellData.ContainedObject.PlayerEntered();
                 }
 

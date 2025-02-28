@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -32,6 +33,8 @@ public class BoardManager : MonoBehaviour
     public Tile[] BlockingTiles; //벽
 
     public FoodObject[] FoodPrefab; //음식 프리팹
+
+    public WallObject[] WallPrefab;
 
     public List<Vector2Int> m_EmptyCellsLists;
 
@@ -95,6 +98,7 @@ public class BoardManager : MonoBehaviour
         }
         //플레이어가 있는 위치의 셀은 emptycellList에서 빼기
         m_EmptyCellsLists.Remove(new Vector2Int(1, 1));
+        GenerateWall();
         GenerateFood();
     }
 
@@ -110,6 +114,20 @@ public class BoardManager : MonoBehaviour
         return m_Grid.GetCellCenterWorld((Vector3Int)cellIndex);
     }
 
+    /// <summary>
+    /// 타일 세팅
+    /// </summary>
+    /// <param name="cellIndex"></param>
+    /// <param name="tile"></param>
+    public void SetCellTile(Vector2Int cellIndex, Tile tile)
+    {
+        m_Tilemap.SetTile(new Vector3Int(cellIndex.x, cellIndex.y, 0), tile);
+    }
+
+    public Tile GetCellTile(Vector2Int cellIndex)
+    {
+        return m_Tilemap.GetTile<Tile>(new Vector3Int(cellIndex.x, cellIndex.y, 0));
+    }
 
     public CellData GetCellData(Vector2Int cellIndex)
     {
@@ -124,10 +142,17 @@ public class BoardManager : MonoBehaviour
         return m_BoardData[cellIndex.x, cellIndex.y];
     }
 
+    void AddObject(CellObject obj, Vector2Int coord)
+    {
+        CellData data = m_BoardData[coord.x, coord.y];
+        obj.transform.position = CellToWorld(coord);
+        data.ContainedObject = obj;
+        obj.Init(coord);
+    }
+
 
     void GenerateFood()
     {
-
         int foodCount = Random.Range(number1, number2);
         for (int i = 0; i < foodCount; i++)
         {
@@ -139,7 +164,12 @@ public class BoardManager : MonoBehaviour
 
             //emptyCell리스트에서 해당 셀의 인덱스 제거
             m_EmptyCellsLists.RemoveAt(randomIndex);
+            //음식생성
+            int randFoodIdx = Random.Range(0, FoodPrefab.Length);
+            FoodObject newFood = Instantiate(FoodPrefab[randFoodIdx]);
+            AddObject(newFood, coord);
 
+            /*
             //좌표설정
             CellData data = m_BoardData[coord.x, coord.y];
 
@@ -151,6 +181,35 @@ public class BoardManager : MonoBehaviour
             newFood.transform.position = CellToWorld(coord);
 
             data.ContainedObject = newFood;
+            */
+        }
+    }
+
+
+    /// <summary>
+    /// 장애물 벽 생성
+    /// </summary>
+    void GenerateWall()
+    {
+        int wallCount = Random.Range(6, 10);
+        for (int i = 0; i < wallCount; i++)
+        {
+            int randomIndex = Random.Range(0, m_EmptyCellsLists.Count);
+            Vector2Int coord = m_EmptyCellsLists[randomIndex];
+
+            m_EmptyCellsLists.RemoveAt(randomIndex);
+
+            int rand = Random.Range(0, WallPrefab.Length);
+            WallObject newWall = Instantiate(WallPrefab[rand]);
+            AddObject(newWall, coord);
+
+            /*
+            //init the wall
+            newWall.Init(coord);
+
+            newWall.transform.position = CellToWorld(coord);
+            data.ContainedObject = newWall;
+            */
         }
     }
     // Update is called once per frame
