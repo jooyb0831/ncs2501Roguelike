@@ -6,9 +6,9 @@ public class CellObject : MonoBehaviour
 {
     protected Vector2Int m_Cell;
 
-    public virtual void Init(Vector2Int cell)
+    public virtual void Init(Vector2Int coord)
     {
-        m_Cell = cell;
+        m_Cell = coord;
     }
     
     /// <summary>

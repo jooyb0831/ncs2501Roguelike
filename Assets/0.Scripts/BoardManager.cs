@@ -32,9 +32,10 @@ public class BoardManager : MonoBehaviour
     public Tile[] GroundTiles; //바닥
     public Tile[] BlockingTiles; //벽
 
+    //셀 오브젝트
     public FoodObject[] FoodPrefab; //음식 프리팹
-
-    public WallObject[] WallPrefab;
+    public WallObject[] WallPrefab; //벽(장애물)타일
+    public ExitCellObject ExitCellPrefab; //출구 타일
 
     public List<Vector2Int> m_EmptyCellsLists;
 
@@ -98,6 +99,17 @@ public class BoardManager : MonoBehaviour
         }
         //플레이어가 있는 위치의 셀은 emptycellList에서 빼기
         m_EmptyCellsLists.Remove(new Vector2Int(1, 1));
+
+        //출구타일 위치 지정
+        Vector2Int endCoord = new Vector2Int(Width - 2, Height - 2);
+
+        //출구타일 배치
+        AddObject(Instantiate(ExitCellPrefab), endCoord);
+
+        //비어있는 셀 리스트에서 출구타일 지우기
+        m_EmptyCellsLists.Remove(endCoord);
+
+        //음식과 장애물 벽 생성
         GenerateWall();
         GenerateFood();
     }
@@ -210,6 +222,28 @@ public class BoardManager : MonoBehaviour
             newWall.transform.position = CellToWorld(coord);
             data.ContainedObject = newWall;
             */
+        }
+    }
+
+    public void Clean()
+    {
+        if (m_BoardData == null) return;
+
+        for (int y = 0; y < Height; y++)
+        {
+            for (int x = 0; x < Width; x++)
+            {
+                var cellData = m_BoardData[x, y];
+
+                if (cellData.ContainedObject != null)
+                {
+                    //Destroy(cellData.ContainedObject) 컴포넌트를 삭제함
+                    //셀 삭제
+                    Destroy(cellData.ContainedObject.gameObject);
+                }
+                //타일 모두 초기화(null)
+                SetCellTile(new Vector2Int(x, y), null);
+            }
         }
     }
     // Update is called once per frame

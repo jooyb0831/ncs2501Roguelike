@@ -600,6 +600,7 @@ MonoBehaviour:
   WallPrefab:
   - {fileID: 2614814088057956091, guid: 712d7dafdc79f754c8b4084c5e64a031, type: 3}
   - {fileID: 2614814088057956091, guid: 6de8b6ebf3760f84888619a034914be5, type: 3}
+  ExitCellPrefab: {fileID: 8943040886573000039, guid: 60237cb4b9eba0d4e9ad214aa8fa2089, type: 3}
   m_EmptyCellsLists: []
   number1: 1
   number2: 6
