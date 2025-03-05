@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,11 +6,21 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
+    public float MoveSpeed = 5.0f;
+    private bool m_IsMoving;
+    private Vector3 m_MoveTarget;
+
     private BoardManager m_Board;
     private Vector2Int m_CellPosition;
 
     private bool m_IsGameOver;
 
+    private Animator m_Animator;
+
+    void Awake()
+    {
+        m_Animator = GetComponent<Animator>();
+    }
 
     /// <summary>
     /// 플레이어를 보드에 스폰하는 코드
@@ -23,7 +34,7 @@ public class PlayerController : MonoBehaviour
         m_CellPosition = cell;
 
         //위치선정
-        MoveTo(cell);
+        MoveTo(cell, true);
     }
 
 
@@ -31,16 +42,28 @@ public class PlayerController : MonoBehaviour
     /// 셀 위치 설정 및 이동
     /// </summary>
     /// <param name="cell"></param>
-    public void MoveTo(Vector2Int cell)
+    public void MoveTo(Vector2Int cell, bool immediate = false)
     {
         m_CellPosition = cell;
-        transform.position = m_Board.CellToWorld(m_CellPosition);
+        if (immediate)
+        {
+            m_IsMoving = false;
+            transform.position = m_Board.CellToWorld(m_CellPosition);
+        }
+        else
+        {
+            m_IsMoving = true;
+            m_MoveTarget = m_Board.CellToWorld(m_CellPosition);
+        }
+        m_Animator.SetBool("Moving", m_IsMoving);
     }
+
+
 
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     public void Init()
@@ -57,6 +80,25 @@ public class PlayerController : MonoBehaviour
             {
                 GameManager.Instance.StartNewGame();
             }
+            return;
+        }
+        if(m_IsMoving)
+        {
+            transform.position = Vector3.MoveTowards(transform.position, m_MoveTarget, MoveSpeed * Time.deltaTime);
+
+            if(transform.position == m_MoveTarget)
+            {
+                m_IsMoving = false;
+                m_Animator.SetBool("Moving", false);
+                var cellData = m_Board.GetCellData(m_CellPosition);
+                if(cellData.ContainedObject != null)
+                {
+                    cellData.ContainedObject.PlayerEntered();
+                    
+                    m_Animator.SetTrigger("Attack");
+                }
+            }
+            
             return;
         }
         Vector2Int newCellTarget = m_CellPosition;
@@ -76,11 +118,13 @@ public class PlayerController : MonoBehaviour
         else if (Keyboard.current.rightArrowKey.wasPressedThisFrame)
         {
             newCellTarget.x++;
+            transform.localScale = Vector3.one;
             hasMoved = true;
         }
         else if (Keyboard.current.leftArrowKey.wasPressedThisFrame)
         {
             newCellTarget.x--;
+            transform.localScale = new Vector3(-1,1,1);
             hasMoved = true;
         }
 
@@ -101,16 +145,23 @@ public class PlayerController : MonoBehaviour
                     //옮기려는 곳으로 위치 설정 및 플레이어의 위치 변경
                     MoveTo(newCellTarget);
                 }
+
+                else if (!cellData.ContainedObject.PlayerWantsToEnter())
+                {
+                    m_Animator.SetTrigger("Attack");
+                    return;
+                }
                 
                 //이동하려는 셀에 장애물이 있어 PlayerWnatsToEnter값이 True인 경우
                 else if(cellData.ContainedObject.PlayerWantsToEnter())
                 {
-                    //이동
-                    MoveTo(newCellTarget);
                     
+                    MoveTo(newCellTarget);
                     //플레이어 먼저 이동하고 호출
-                    cellData.ContainedObject.PlayerEntered();
+                    //cellData.ContainedObject.PlayerEntered();
                 }
+
+
 
             }
             
