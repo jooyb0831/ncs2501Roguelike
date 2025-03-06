@@ -37,6 +37,7 @@ public class BoardManager : MonoBehaviour
     public WallObject[] WallPrefab; //벽(장애물)타일
     public ExitCellObject ExitCellPrefab; //출구 타일
 
+    public Enemy[] EnemyPrefab;
     public List<Vector2Int> m_EmptyCellsLists;
 
     [SerializeField] int number1;
@@ -111,6 +112,7 @@ public class BoardManager : MonoBehaviour
 
         //음식과 장애물 벽 생성
         GenerateWall();
+        GenerateEnemy();
         GenerateFood();
     }
 
@@ -223,6 +225,25 @@ public class BoardManager : MonoBehaviour
             data.ContainedObject = newWall;
             */
         }
+    }
+
+    /// <summary>
+    /// 적 생성
+    /// </summary>
+    void GenerateEnemy()
+    {
+        int enemyCount = Random.Range(1, 4);
+        for (int i = 0; i < enemyCount; i++)
+        {
+            int randomIndex = Random.Range(0, m_EmptyCellsLists.Count);
+            Vector2Int coord = m_EmptyCellsLists[randomIndex];
+            m_EmptyCellsLists.RemoveAt(randomIndex);
+
+            int rand = Random.Range(0,EnemyPrefab.Length);
+            Enemy enemy = Instantiate(EnemyPrefab[rand]);
+            AddObject(enemy, coord);
+        }
+
     }
 
     public void Clean()

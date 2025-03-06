@@ -624,6 +624,9 @@ MonoBehaviour:
   - {fileID: 2614814088057956091, guid: 712d7dafdc79f754c8b4084c5e64a031, type: 3}
   - {fileID: 2614814088057956091, guid: 6de8b6ebf3760f84888619a034914be5, type: 3}
   ExitCellPrefab: {fileID: 8943040886573000039, guid: 60237cb4b9eba0d4e9ad214aa8fa2089, type: 3}
+  EnemyPrefab:
+  - {fileID: -1642455818928211993, guid: 06e6445ac10be0f43acf5d5bbe4bd14f, type: 3}
+  - {fileID: -1642455818928211993, guid: 9a93f882d1a43374194197bbe27e8506, type: 3}
   m_EmptyCellsLists: []
   number1: 1
   number2: 6

@@ -22,7 +22,7 @@ public class GameManager : MonoBehaviour
 
     private int m_CurrentLevel = 1;
 
-    private int m_FoodAmount = 20;
+    private int m_FoodAmount = 40;
     private const string GOS1 = "GAME OVER";
     private const string GOS2 = "You Traveled\n\nthrough";
     private const string GOS3 = "levels!";
@@ -77,6 +77,8 @@ public class GameManager : MonoBehaviour
 
         if(m_FoodAmount <= 0)
         {
+            m_FoodAmount = 0;
+            m_FoodLabel.text = $"Food : {m_FoodAmount:000}";
             PlayerController.GameOver();
             m_GameOverPanel.style.visibility = Visibility.Visible;
             m_GameOverMessage.text = $"{GOS1}\n\n<color=white>{GOS2}</color> <color=yellow>{m_CurrentLevel}</color> <color=white>{GOS3}\n\n\n{GOS4}</color>";
