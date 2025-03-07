@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -25,8 +26,8 @@ public class BoardManager : MonoBehaviour
     private Grid m_Grid;
 
     //생성할 타일맵의 크기
-    public int Width;
-    public int Height;
+    private int Width;
+    private int Height;
 
     //그릴 타일을 담을 배열
     public Tile[] GroundTiles; //바닥
@@ -44,10 +45,11 @@ public class BoardManager : MonoBehaviour
     [SerializeField] int number2;
 
 
+    //Confiner
+    [SerializeField] PolygonCollider2D m_Collider;
     // Start is called before the first frame update
     void Start()
     {
-
         //플레이어 스폰
         //Player.Spawn(this, new Vector2Int(1, 1));
     }
@@ -60,6 +62,31 @@ public class BoardManager : MonoBehaviour
 
         //비어있는 셀 리스트 초기화
         m_EmptyCellsLists = new List<Vector2Int>();
+
+        //셀 크기 설정
+        int level = GameManager.Instance.Level;
+
+        if(level >=1 && level<5)
+        {
+            int x = Random.Range(8,12);
+            int y = Random.Range(8,12);
+            Width = x;
+            Height = y;
+        }
+        else if(level >= 5 && level < 10)
+        {
+            int x = Random.Range(10, 14);
+            int y = Random.Range(10, 14);
+            Width = x;
+            Height = y;
+        }
+        else
+        {
+            int x = Random.Range(15, 17);
+            int y = Random.Range(15, 17);
+            Width = x;
+            Height = y;
+        }
 
 
         //보드 데이터 설정 (전체 새로 지칭)
@@ -98,6 +125,7 @@ public class BoardManager : MonoBehaviour
                 m_Tilemap.SetTile(new Vector3Int(x, y, 0), tile);
             }
         }
+
         //플레이어가 있는 위치의 셀은 emptycellList에서 빼기
         m_EmptyCellsLists.Remove(new Vector2Int(1, 1));
 
@@ -114,6 +142,8 @@ public class BoardManager : MonoBehaviour
         GenerateWall();
         GenerateEnemy();
         GenerateFood();
+
+
     }
 
 

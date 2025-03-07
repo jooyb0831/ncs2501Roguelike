@@ -44,8 +44,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b7b50a82a0a819f40994b5e37dda42e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ObstacleTile: {fileID: 11400000, guid: 8dff12acad2baf34f8270f3d520368b6, type: 2}
-  HP1Tile: {fileID: 11400000, guid: 15d17a2c1c904ae4486ed43c2825eee4, type: 2}
+  ObstacleTile: {fileID: 11400000, guid: 09af630db6cdcbb469c8a262d98eeb9a, type: 2}
+  HP1Tile: {fileID: 11400000, guid: 6a97b06762eddda49824384bb5ad8664, type: 2}
   TileSprites:
   - {fileID: 21300050, guid: fbe1e7b94bb1a4a099d5bcb15a00141c, type: 3}
   - {fileID: 21300052, guid: fbe1e7b94bb1a4a099d5bcb15a00141c, type: 3}

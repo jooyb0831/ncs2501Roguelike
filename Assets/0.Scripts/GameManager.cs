@@ -21,6 +21,14 @@ public class GameManager : MonoBehaviour
     private Label m_GameOverMessage;
 
     private int m_CurrentLevel = 1;
+    public int Level
+    {
+        get
+        {
+            return m_CurrentLevel;
+        }
+        private set{}
+    }
 
     private int m_FoodAmount = 40;
     private const string GOS1 = "GAME OVER";
