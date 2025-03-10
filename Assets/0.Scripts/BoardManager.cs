@@ -44,6 +44,13 @@ public class BoardManager : MonoBehaviour
     [SerializeField] int number1;
     [SerializeField] int number2;
 
+    [SerializeField] int minWall;
+    [SerializeField] int maxWall;
+    [SerializeField] int minFood;
+    [SerializeField] int maxFood;
+    [SerializeField] int minEnemy;
+    [SerializeField] int maxEnemy;
+
 
     //Confiner
     [SerializeField] PolygonCollider2D m_Collider;
@@ -66,14 +73,14 @@ public class BoardManager : MonoBehaviour
         //셀 크기 설정
         int level = GameManager.Instance.Level;
 
-        if(level >=1 && level<5)
+        if (level >= 0 && level < 5)
         {
-            int x = Random.Range(8,12);
-            int y = Random.Range(8,12);
+            int x = Random.Range(8, 12);
+            int y = Random.Range(8, 12);
             Width = x;
             Height = y;
         }
-        else if(level >= 5 && level < 10)
+        else if (level >= 5 && level < 10)
         {
             int x = Random.Range(10, 14);
             int y = Random.Range(10, 14);
@@ -138,10 +145,12 @@ public class BoardManager : MonoBehaviour
         //비어있는 셀 리스트에서 출구타일 지우기
         m_EmptyCellsLists.Remove(endCoord);
 
+        //레벨에 따른 오브젝트 수 조정
+
         //음식과 장애물 벽 생성
-        GenerateWall();
-        GenerateEnemy();
-        GenerateFood();
+        GenerateWall(AdjustObjectsCount(true, 3, minWall, maxWall));
+        GenerateEnemy(AdjustObjectsCount(true, 3, minEnemy, maxEnemy));
+        GenerateFood(AdjustObjectsCount(false, 3, minFood, maxFood));
 
 
     }
@@ -195,9 +204,9 @@ public class BoardManager : MonoBehaviour
     }
 
 
-    void GenerateFood()
+    void GenerateFood(int val)
     {
-        int foodCount = Random.Range(number1, number2);
+        int foodCount = Random.Range(val, val + 2);
         for (int i = 0; i < foodCount; i++)
         {
             //비어있고 이동 가능한 셀의 인덱스 받기
@@ -233,9 +242,9 @@ public class BoardManager : MonoBehaviour
     /// <summary>
     /// 장애물 벽 생성
     /// </summary>
-    void GenerateWall()
+    void GenerateWall(int val)
     {
-        int wallCount = Random.Range(6, 10);
+        int wallCount = Random.Range(val, val + 2);
         for (int i = 0; i < wallCount; i++)
         {
             int randomIndex = Random.Range(0, m_EmptyCellsLists.Count);
@@ -260,22 +269,24 @@ public class BoardManager : MonoBehaviour
     /// <summary>
     /// 적 생성
     /// </summary>
-    void GenerateEnemy()
+    void GenerateEnemy(int val)
     {
-        int enemyCount = Random.Range(1, 4);
+        int enemyCount = Random.Range(val, val + 2);
         for (int i = 0; i < enemyCount; i++)
         {
             int randomIndex = Random.Range(0, m_EmptyCellsLists.Count);
             Vector2Int coord = m_EmptyCellsLists[randomIndex];
             m_EmptyCellsLists.RemoveAt(randomIndex);
 
-            int rand = Random.Range(0,EnemyPrefab.Length);
+            int rand = Random.Range(0, EnemyPrefab.Length);
             Enemy enemy = Instantiate(EnemyPrefab[rand]);
             AddObject(enemy, coord);
         }
 
     }
 
+
+    //보드 정리
     public void Clean()
     {
         if (m_BoardData == null) return;
@@ -296,6 +307,26 @@ public class BoardManager : MonoBehaviour
                 SetCellTile(new Vector2Int(x, y), null);
             }
         }
+    }
+
+    private int AdjustObjectsCount(bool isAdd, int ratio, int min, int max)
+    {
+        int val = GameManager.Instance.Level / ratio;
+
+        int tmp, rv;
+
+        if (isAdd)
+        {
+            tmp = min + val;
+            rv = (tmp > max) ? max : tmp;
+        }
+        else
+        {
+            tmp = max - val;
+            rv = (tmp < min) ? min : tmp;
+        }
+
+        return rv;
     }
     // Update is called once per frame
     void Update()

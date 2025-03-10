@@ -8,6 +8,7 @@ public class Enemy : CellObject
     public int Health = 5;
     private int m_CurrentHealth;
 
+    [SerializeField] AudioClip clip;
     private void Awake()
     {
         GameManager.Instance.TurnManager.OnTick += TurnHappened;
@@ -72,6 +73,7 @@ public class Enemy : CellObject
         {
             //플레이어 공격
             GameManager.Instance.ChangeFood(-3);
+            GameManager.Instance.PlaySound(clip);
         }
         else
         {

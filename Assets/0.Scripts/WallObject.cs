@@ -15,6 +15,7 @@ public class WallObject : CellObject
     private int m_HealthPoint;
     private Tile m_OriginalTile;
 
+    [SerializeField] AudioClip[] clips;
     public override void Init(Vector2Int cell)
     {
         base.Init(cell);
@@ -30,15 +31,15 @@ public class WallObject : CellObject
 
         if(m_HealthPoint > 0)
         {
+            GameManager.Instance.PlaySound(clips[0]);
             if (m_HealthPoint == 1)
             {
-                
                 GameManager.Instance.BoardManager.SetCellTile(m_Cell, HP1Tile);
             }
             return false;
         }
         GameManager.Instance.BoardManager.SetCellTile(m_Cell, m_OriginalTile);
-        
+        GameManager.Instance.PlaySound(clips[1]);
         Destroy(gameObject);
         return true;
     }

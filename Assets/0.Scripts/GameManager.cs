@@ -35,6 +35,10 @@ public class GameManager : MonoBehaviour
     private const string GOS2 = "You Traveled\n\nthrough";
     private const string GOS3 = "levels!";
     private const string GOS4 = "Press 'ENTER'\n\nto Restart.";
+
+    private AudioSource audioSource;
+
+    [SerializeField] GameObject androidPanel;
     private void Awake()
     {
         if (Instance != null) //null인지 체크후 이미 존재한다면 하나만 남게 처리함.
@@ -48,6 +52,17 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+#if(UNITY_ANDROID)
+    Camera camera = Camera.main;
+    camera.orthographicSize = 12;
+    camera.transform.position = new Vector3(4,4,-10);
+    androidPanel.SetActive(true);
+#else
+    androidPanel.SetActive(false);
+
+#endif
+        audioSource = GetComponent<AudioSource>();
+
         m_FoodLabel = UIDoc.rootVisualElement.Q<Label>("FoodLabel");
         m_LevelLabel = UIDoc.rootVisualElement.Q<Label>("LevelLabel");
         m_GameOverPanel = UIDoc.rootVisualElement.Q<VisualElement>("GameOverPanel");
@@ -106,9 +121,17 @@ public class GameManager : MonoBehaviour
         PlayerController.Init();
     }
 
+    public void PlaySound(AudioClip audioClip)
+    {
+        audioSource.PlayOneShot(audioClip);
+    }
+
     // Update is called once per frame
     void Update()
     {
-
+        if(Input.GetKeyDown(KeyCode.Escape))
+        {
+            Application.Quit();
+        }
     }
 }

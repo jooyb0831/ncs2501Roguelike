@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+
 public class PlayerController : MonoBehaviour
 {
     private readonly int hashMoving = Animator.StringToHash("Moving");
@@ -15,6 +16,9 @@ public class PlayerController : MonoBehaviour
     private BoardManager m_Board;
     private Vector2Int m_CellPosition; 
 
+
+    private Vector2Int newCellTarget;
+    private bool hasMoved;
     private bool m_IsGameOver;
 
     private Animator m_Animator;
@@ -109,35 +113,37 @@ public class PlayerController : MonoBehaviour
                     //m_Animator.SetTrigger(hashAttack);
                 }
             }
-            
             return;
         }
-        Vector2Int newCellTarget = m_CellPosition;
-        bool hasMoved = false;
+        newCellTarget = m_CellPosition;
+        hasMoved = false;
 
-        //기존의 InputManager가 아닌 새로운 InputSystem을 활용
-        if (Keyboard.current.upArrowKey.wasPressedThisFrame)
+        if(Keyboard.current.spaceKey.wasPressedThisFrame)
         {
-            newCellTarget.y++;
-            hasMoved = true;
+            MoveSkip();
+        }
+        //기존의 InputManager가 아닌 새로운 InputSystem을 활용
+        else if (Keyboard.current.upArrowKey.wasPressedThisFrame)
+        {
+            MoveUp();
         }
         else if (Keyboard.current.downArrowKey.wasPressedThisFrame)
         {
-            newCellTarget.y--;
-            hasMoved = true;
+            MoveDown();
         }
         else if (Keyboard.current.rightArrowKey.wasPressedThisFrame)
         {
-            newCellTarget.x++;
-            transform.localScale = Vector3.one;
-            hasMoved = true;
+            MoveRight();
         }
         else if (Keyboard.current.leftArrowKey.wasPressedThisFrame)
         {
-            newCellTarget.x--;
-            transform.localScale = new Vector3(-1,1,1);
-            hasMoved = true;
+            MoveLeft();
         }
+        
+    }
+
+    private void UpdatePlayer()
+    {
 
         if (hasMoved)
         {
@@ -172,9 +178,52 @@ public class PlayerController : MonoBehaviour
                 }
             }
         }
+    }
 
-        
+    public void MoveUp()
+    {
+        //if(m_IsMoving) return;
+        newCellTarget.y++;
+        hasMoved = true;
+        UpdatePlayer();
+    }
 
+    public void MoveDown()
+    {
+        if(m_IsMoving) return;
+        newCellTarget.y--;
+        hasMoved = true;
+        UpdatePlayer();
+    }
+    
+    public void MoveRight()
+    {
+        if(m_IsMoving) return;
+        newCellTarget.x++;
+        transform.localScale = Vector3.one;
+        hasMoved = true;
+        UpdatePlayer();
+    }
+
+    public void MoveLeft()
+    {
+        if(m_IsMoving) return;
+        newCellTarget.x--;
+        transform.localScale = new Vector3(-1, 1, 1);
+        hasMoved = true;
+        UpdatePlayer();
+    }
+
+    public void MoveSkip()
+    {
+        if(m_IsGameOver)
+        {
+            GameManager.Instance.StartNewGame();
+            return;
+        }
+        if(m_IsMoving) return;
+        hasMoved = true;
+        UpdatePlayer();
     }
     
     public void GameOver()

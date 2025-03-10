@@ -51,3 +51,6 @@ MonoBehaviour:
   - {fileID: 21300052, guid: fbe1e7b94bb1a4a099d5bcb15a00141c, type: 3}
   - {fileID: 21300104, guid: fbe1e7b94bb1a4a099d5bcb15a00141c, type: 3}
   tempTile: {fileID: 0}
+  clips:
+  - {fileID: 8300000, guid: 4c2332bc8245b474dad63074059bb755, type: 3}
+  - {fileID: 8300000, guid: f6aaac83be9e0493493aace800b76619, type: 3}

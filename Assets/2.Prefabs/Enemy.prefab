@@ -46,6 +46,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Health: 3
+  clip: {fileID: 8300000, guid: 0db8cac2749584a009540aa5671ee80d, type: 3}
 --- !u!212 &3965250211022689258
 SpriteRenderer:
   m_ObjectHideFlags: 0

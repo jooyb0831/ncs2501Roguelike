@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class FoodObject : CellObject
 {
+    [SerializeField] AudioClip eatSound;
     public int AmountGranted = 10;
     public override void PlayerEntered()
     {
@@ -11,5 +12,6 @@ public class FoodObject : CellObject
         
         //음식 증가
         GameManager.Instance.ChangeFood(AmountGranted);
+        GameManager.Instance.PlaySound(eatSound);
     }
 }
